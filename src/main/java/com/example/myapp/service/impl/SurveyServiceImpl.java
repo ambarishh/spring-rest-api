@@ -6,6 +6,7 @@ import com.example.myapp.repository.InMemoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,11 +38,13 @@ public class SurveyServiceImpl implements SurveyService{
     public List<Question> getAllQuestionsOfSurvey(String surveyId) {
 
         List<Survey> surveys = getAllSurveys();
-        Optional<Survey> optionalSurvey =  surveys.stream().filter(
-                survey -> survey.getId().equals(surveyId)
-        ).findFirst();
+        Optional<Survey> optionalSurvey =  surveys.stream()
+                .filter(survey -> survey.getId().equals(surveyId))
+                .findFirst();
 
-        return optionalSurvey.get().getQuestions();
+        return optionalSurvey
+                .map(Survey::getQuestions)
+                .orElse(new ArrayList<>());
 
     }
 
