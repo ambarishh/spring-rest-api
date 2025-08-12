@@ -10,4 +10,5 @@ public class Constants {
     public static final Question NOT_AVAILABLE_QUESTION = new Question();
 
     public static final SecureRandom SECURE_RANDOM = new SecureRandom();
+    public static final String SURVEY_TASK_QUEUE = "SURVEY_TASK_QUEUE";
 }

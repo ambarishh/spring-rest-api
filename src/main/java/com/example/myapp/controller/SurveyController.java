@@ -3,6 +3,9 @@ package com.example.myapp.controller;
 import com.example.myapp.model.Question;
 import com.example.myapp.model.Survey;
 import com.example.myapp.service.impl.SurveyService;
+import com.example.myapp.workflow.AddQuestionWorkflow;
+import io.temporal.client.WorkflowClient;
+import io.temporal.client.WorkflowOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +18,16 @@ import java.util.List;
 
 import static com.example.myapp.service.utils.Constants.NOT_AVAILABLE_QUESTION;
 import static com.example.myapp.service.utils.Constants.NOT_AVAILABLE_SURVEY;
+import static com.example.myapp.service.utils.Constants.SURVEY_TASK_QUEUE;
 
 @RestController
 public class SurveyController {
 
     @Autowired
     private SurveyService surveyService;
+
+    @Autowired
+    private WorkflowClient workflowClient;
 
     @GetMapping("/surveys")
     public List<Survey> getAllSurveys(){
@@ -67,7 +74,11 @@ public class SurveyController {
         @PathVariable String  surveyId,
         @RequestBody Question question
     ){
-        String questionId = surveyService.addNewSurveyQuestion(surveyId, question);
+        AddQuestionWorkflow workflow = workflowClient.newWorkflowStub(
+                AddQuestionWorkflow.class,
+                WorkflowOptions.newBuilder().setTaskQueue(SURVEY_TASK_QUEUE).build()
+        );
+        String questionId = workflow.addQuestion(surveyId, question);
         URI location = ServletUriComponentsBuilder
                             .fromCurrentRequest()
                             .path("/{questionId}")
