@@ -72,11 +72,11 @@ public class SurveyServiceImpl implements SurveyService{
     }
 
     @Override
-    public void deleteQuestionOfSurvey(String surveyId, String questionId) {
+    public boolean deleteQuestionOfSurvey(String surveyId, String questionId) {
 
         List<Question> questions = getAllQuestionsOfSurvey(surveyId);
 
-        questions.removeIf(
+        return questions.removeIf(
                 question -> question.getId().equals(questionId)
         );
     }
