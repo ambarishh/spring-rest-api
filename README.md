@@ -1,6 +1,6 @@
 # REST with Spring Boot
 
-Simple CRUD application using Spring Boot 3 & Java 17.
+Simple CRUD application using Spring Boot 3 & Java 17. The application now uses Temporal to orchestrate workflows when adding new survey questions.
 
 ### URLs
 
