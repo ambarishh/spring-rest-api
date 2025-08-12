@@ -37,12 +37,17 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+                <dependency>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-test</artifactId>
+                        <scope>test</scope>
+                </dependency>
+                <dependency>
+                        <groupId>io.temporal</groupId>
+                        <artifactId>temporal-sdk</artifactId>
+                        <version>1.21.0</version>
+                </dependency>
+        </dependencies>
 
 	<build>
 		<plugins>
