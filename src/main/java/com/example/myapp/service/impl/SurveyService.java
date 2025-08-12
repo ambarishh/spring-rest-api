@@ -16,7 +16,7 @@ public interface SurveyService {
 
     String addNewSurveyQuestion(String surveyId, Question question);
 
-    void deleteQuestionOfSurvey(String surveyId, String questionId);
+    boolean deleteQuestionOfSurvey(String surveyId, String questionId);
 
 }
 

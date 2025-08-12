@@ -82,7 +82,10 @@ public class SurveyController {
             @PathVariable String surveyId,
             @PathVariable String questionId
     ){
-        surveyService.deleteQuestionOfSurvey(surveyId, questionId);
+        boolean removed = surveyService.deleteQuestionOfSurvey(surveyId, questionId);
+        if(!removed){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
         return ResponseEntity.noContent().build();
     }
