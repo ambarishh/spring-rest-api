@@ -3,6 +3,9 @@ package com.example.myapp.controller;
 import com.example.myapp.model.Question;
 import com.example.myapp.model.Survey;
 import com.example.myapp.service.impl.SurveyService;
+import com.example.myapp.workflow.DeleteQuestionWorkflow;
+import io.temporal.client.WorkflowClient;
+import io.temporal.client.WorkflowOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,9 @@ public class SurveyController {
 
     @Autowired
     private SurveyService surveyService;
+
+    @Autowired
+    private WorkflowClient workflowClient;
 
     @GetMapping("/surveys")
     public List<Survey> getAllSurveys(){
@@ -82,7 +88,11 @@ public class SurveyController {
             @PathVariable String surveyId,
             @PathVariable String questionId
     ){
-        boolean removed = surveyService.deleteQuestionOfSurvey(surveyId, questionId);
+        DeleteQuestionWorkflow workflow = workflowClient.newWorkflowStub(
+                DeleteQuestionWorkflow.class,
+                WorkflowOptions.newBuilder().setTaskQueue("SURVEY_TASK_QUEUE").build());
+
+        boolean removed = workflow.deleteQuestion(surveyId, questionId);
         if(!removed){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
