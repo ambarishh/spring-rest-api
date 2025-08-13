@@ -1,121 +1,82 @@
 # REST with Spring Boot
 
-Simple CRUD application using Spring Boot 3 & Java 17.
+Simple CRUD application using Spring Boot 3 & Java 21.
 
-### URLs
+## Prerequisites
 
+- Docker and Docker Compose
+- (Optional) Java 21 and Maven 3.9.6+ for local development without Docker
+
+## Quick Start with Docker Compose
+
+1. Build and start the application:
+   ```bash
+   docker-compose up --build
+   ```
+
+2. The application will be available at: http://localhost:8080
+
+3. To run in detached mode:
+   ```bash
+   docker-compose up --build -d
+   ```
+
+4. To stop the application:
+   ```bash
+   docker-compose down
+   ```
+
+## Local Development (Without Docker)
+
+1. Build the application:
+   ```bash
+   mvn clean package
+   ```
+
+2. Run the application:
+   ```bash
+   mvn spring-boot:run
+   ```
+
+## API Reference
+
+### REST API Endpoints
+
+#### Create a Question
 ```bash
-curl -X POST [http://localhost:8081/surveys/123/questions/](http://localhost:8081/surveys/%7BsurveyId%7D/questions/) \
+curl -X POST http://localhost:8080/surveys/123/questions/ \
 -H "Content-Type: application/json" \
 -d '{
-"id": "q1",
-"text": "What is your favorite programming language?",
-"options": ["Java", "Python", "JavaScript", "C++"],
-"ans": "Java"
+  "id": "q1",
+  "text": "What is your favorite programming language?",
+  "options": ["Java", "Python", "JavaScript", "C++"],
+  "ans": "Java"
 }'
-
-curl -X GET http://localhost:8081/surveys
-curl -X GET http://localhost:8081/surveys/Survey1/questions
-curl -X DELETE http://localhost:8081/surveys/Survey1/questions/Question1
-
 ```
 
-#### GET
-
-- http://localhost:8080/surveys
-- http://localhost:8080/surveys/Survey1
-- http://localhost:8080/surveys/Survey1/questions
-- http://localhost:8080/surveys/Survey1/questions/Question1
-
-##### Response
-
-```
-[
-    {
-        "id": "Survey1",
-        "title": "My Favorite Survey",
-        "description": "Description of the Survey",
-        "questions": [
-            {
-                "id": "Question1",
-                "description": "Most Popular Cloud Platform Today",
-                "options": [
-                    "AWS",
-                    "Azure",
-                    "Google Cloud",
-                    "Oracle Cloud"
-                ],
-                "ans": "AWS"
-            },
-            {
-                "id": "Question2",
-                "description": "Fastest Growing Cloud Platform",
-                "options": [
-                    "AWS",
-                    "Azure",
-                    "Google Cloud",
-                    "Oracle Cloud"
-                ],
-                "ans": "Google Cloud"
-            },
-            {
-                "id": "Question3",
-                "description": "Most Popular DevOps Tool",
-                "options": [
-                    "Kubernetes",
-                    "Docker",
-                    "Terraform",
-                    "Azure DevOps"
-                ],
-                "ans": "Kubernetes"
-            }
-        ]
-    }
-]
-
+#### Get All Surveys
+```bash
+curl -X GET http://localhost:8080/surveys
 ```
 
-#### DELETE
-
-- http://localhost:8080/surveys/Survey1/questions/Question1
-
-##### POST
-
-**URL**: http://localhost:8080/surveys/Survey1/questions/
-**Header**: Content-Type:application/json
-
-**Request Body**
-```
-{
-    "description": "Your Favorite Cloud Platform",
-    "options": [
-        "AWS",
-        "Azure",
-        "Google Cloud",
-        "Oracle Cloud"
-    ],
-    "ans": "Google Cloud"
-}
-
+#### Get Questions for a Survey
+```bash
+curl -X GET http://localhost:8080/surveys/Survey1/questions
 ```
 
-##### PUT
-
-**URL**: http://localhost:8080/surveys/Survey1/questions/Question1
-**Header**: Content-Type:application/json
-**Request Body**
-```
-{
-    "id": "Question1",
-    "description": "Most Popular Cloud Platform Today Change",
-    "options": [
-        "AWS",
-        "Azure",
-        "Google Cloud",
-        "Oracle Cloud"
-    ],
-    "ans": "Google Cloud"
-}
-
+#### Delete a Question
+```bash
+curl -X DELETE http://localhost:8080/surveys/Survey1/questions/Question1
 ```
 
+## Troubleshooting
+
+- If the application fails to start, check the logs:
+  ```bash
+  docker-compose logs survey-application
+  ```
+- The application includes health checks at `/actuator/health`
+- To see the application logs in real-time:
+  ```bash
+  docker-compose logs -f survey-application
+  ```
