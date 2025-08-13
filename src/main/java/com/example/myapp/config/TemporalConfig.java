@@ -12,7 +12,7 @@ import java.time.Duration;
 
 @Configuration
 public class TemporalConfig {
-    public static final String TASK_QUEUE = "SURVEY_TASK_QUEUE";
+    public static final String TASK_QUEUE_NAME = "survey_task_queue";
 
 
     @Bean
@@ -22,22 +22,9 @@ public class TemporalConfig {
     }
 
     @Bean
-    public WorkerFactory workerFactory(WorkflowClient workflowClient) {
-        return WorkerFactory.newInstance(workflowClient);
-    }
-
-    @Bean
-    public io.temporal.worker.WorkerOptions workerOptions() {
-        return io.temporal.worker.WorkerOptions.newBuilder()
-                .setMaxConcurrentWorkflowTaskExecutionSize(100)
-                .setMaxConcurrentActivityExecutionSize(100)
-                .build();
-    }
-
-    @Bean
     public io.temporal.client.WorkflowOptions workflowOptions() {
         return io.temporal.client.WorkflowOptions.newBuilder()
-                .setTaskQueue(TASK_QUEUE)
+                .setTaskQueue(TASK_QUEUE_NAME)
                 .setWorkflowExecutionTimeout(Duration.ofHours(1))
                 .setWorkflowRunTimeout(Duration.ofMinutes(10))
                 .setWorkflowTaskTimeout(Duration.ofSeconds(30))

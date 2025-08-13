@@ -1,9 +1,12 @@
-package com.example.myapp.workflow;
+package com.example.myapp.activities;
 
+import com.example.myapp.activities.SurveyActivities;
 import com.example.myapp.service.impl.SurveyService;
+import io.temporal.spring.boot.ActivityImpl;
 import org.springframework.stereotype.Component;
 
 @Component
+@ActivityImpl(workers = "survey-worker")
 public class SurveyActivitiesImpl implements SurveyActivities {
 
     private final SurveyService surveyService;

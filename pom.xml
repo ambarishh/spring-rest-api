@@ -43,11 +43,12 @@
                         <artifactId>spring-boot-starter-test</artifactId>
                         <scope>test</scope>
                 </dependency>
-                <dependency>
-                        <groupId>io.temporal</groupId>
-                        <artifactId>temporal-sdk</artifactId>
-                        <version>1.21.0</version>
-                </dependency>
+		<!-- https://mvnrepository.com/artifact/io.temporal/temporal-spring-boot-starter-alpha -->
+			<dependency>
+				<groupId>io.temporal</groupId>
+				<artifactId>temporal-spring-boot-starter-alpha</artifactId>
+				<version>1.23.0</version>
+			</dependency>
         </dependencies>
 
 	<build>

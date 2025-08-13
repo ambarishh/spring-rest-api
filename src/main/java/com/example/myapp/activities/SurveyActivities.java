@@ -1,4 +1,4 @@
-package com.example.myapp.workflow;
+package com.example.myapp.activities;
 
 import io.temporal.activity.ActivityInterface;
 import io.temporal.activity.ActivityMethod;
