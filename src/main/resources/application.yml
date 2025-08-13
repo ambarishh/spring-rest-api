@@ -1,9 +1,89 @@
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,metrics,env
+spring:
+  application:
+    name: survey-service
 
+# Server Configuration
+server:
+  port: 8081
+  servlet:
+    context-path: /
+
+# Temporal Configuration
 temporal:
-  service:
-    address: 127.0.0.1:7233
+  # Temporal Server connection settings
+  server:
+    address: localhost:7233  # Default Temporal server address
+    namespace: default       # Temporal namespace to use
+
+  # Worker configuration
+  worker:
+    task-queue: SURVEY_TASK_QUEUE  # Task queue name for workflow and activity workers
+    max-concurrent-activity-execution-size: 10
+    max-concurrent-workflow-execution-size: 10
+
+    # Activity configuration
+    activities:
+      # Global activity configuration
+      default-activity-options:
+        schedule-to-close-timeout: 1h  # Total time including retries
+        schedule-to-start-timeout: 10s  # Time activity can stay in task queue
+        start-to-close-timeout: 20s  # Time after activity starts to complete
+        heartbeat-timeout: 10s  # Heartbeat timeout
+        retry-policy:
+          initial-interval: 1s
+          backoff-coefficient: 2.0
+          maximum-interval: 100s
+          maximum-attempts: 5  # 0 means unlimited retries
+          non-retryable-error-types:
+            - java.lang.NullPointerException
+            - java.lang.IllegalArgumentException
+
+    # Workflow task configuration
+    workflow-thread-pool-size: 10
+    max-concurrent-workflow-task-pollers: 2
+    max-concurrent-activity-task-pollers: 2
+
+  # Workflow client configuration
+  client:
+    options:
+      namespace: default
+
+  # Retry configuration for workflow tasks
+  retry:
+    workflow:
+      initial-interval: 1s
+      backoff-coefficient: 2.0
+      maximum-interval: 100s
+      maximum-attempts: 5
+    activity:
+      initial-interval: 1s
+      backoff-coefficient: 2.0
+      maximum-interval: 60s
+      maximum-attempts: 3
+
+# Logging configuration
+logging:
+  level:
+    org.springframework: INFO
+    io.temporal: INFO
+    com.example.myapp: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Application-specific properties
+app:
+  # Maximum number of retry attempts for application logic
+  max-retry-attempts: 3
+
+  # Circuit breaker configuration
+  circuit-breaker:
+    failure-rate-threshold: 50
+    wait-duration-in-open-state: 5s
+    permitted-number-of-calls-in-half-open-state: 10
+    sliding-window-size: 10
+    minimum-number-of-calls: 5
+
+  # Rate limiting
+  rate-limit:
+    capacity: 100
+    refresh-period: 1s

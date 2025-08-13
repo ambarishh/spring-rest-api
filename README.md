@@ -4,6 +4,21 @@ Simple CRUD application using Spring Boot 3 & Java 17.
 
 ### URLs
 
+```bash
+curl -X POST [http://localhost:8081/surveys/123/questions/](http://localhost:8081/surveys/%7BsurveyId%7D/questions/) \
+-H "Content-Type: application/json" \
+-d '{
+"id": "q1",
+"text": "What is your favorite programming language?",
+"options": ["Java", "Python", "JavaScript", "C++"],
+"ans": "Java"
+}'
+
+curl -X GET http://localhost:8081/surveys
+curl -X GET http://localhost:8081/surveys/Survey1/questions
+curl -X DELETE http://localhost:8081/surveys/Survey1/questions/Question1
+
+```
 
 #### GET
 

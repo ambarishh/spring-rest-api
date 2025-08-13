@@ -4,6 +4,7 @@ import com.example.myapp.model.Question;
 import com.example.myapp.model.Survey;
 import com.example.myapp.service.impl.SurveyService;
 import com.example.myapp.workflow.DeleteQuestionWorkflow;
+import io.temporal.activity.ActivityOptions;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ public class SurveyController {
 
     @Autowired
     private WorkflowClient workflowClient;
+    @Autowired
+    private WorkflowOptions workflowOptions;
 
     @GetMapping("/surveys")
     public List<Survey> getAllSurveys(){
@@ -90,7 +93,7 @@ public class SurveyController {
     ){
         DeleteQuestionWorkflow workflow = workflowClient.newWorkflowStub(
                 DeleteQuestionWorkflow.class,
-                WorkflowOptions.newBuilder().setTaskQueue("SURVEY_TASK_QUEUE").build());
+                workflowOptions);
 
         boolean removed = workflow.deleteQuestion(surveyId, questionId);
         if(!removed){
